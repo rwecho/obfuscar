@@ -2,17 +2,17 @@
 
 /// <copyright>
 /// Copyright (c) 2007 Ryan Williams <drcforbin@gmail.com>
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -403,7 +403,7 @@ namespace Obfuscar
                     foreach (CustomAttributeArgument ca in customattributearguments)
                     {
                         if (ca.Type.FullName == "System.Type" && ca.Value != null)
-                            typerefs.Add((TypeReference) ca.Value);
+                            typerefs.Add((TypeReference)ca.Value);
                     }
                 }
                 customattributes.Clear();
@@ -425,7 +425,7 @@ namespace Obfuscar
             {
                 foreach (var item in items)
                 {
-                    var node = new Node<TypeDefinition> {Item = item};
+                    var node = new Node<TypeDefinition> { Item = item };
                     Root.Add(node);
                     _map.Add(item.FullName, node);
                 }
@@ -914,12 +914,9 @@ namespace Obfuscar
                 return true;
             }
 
-            if (method.Method.IsPublic() && (
-                method.DeclaringType.IsTypePublic() ||
-                map.GetMethodGroup(method)?.Methods.FirstOrDefault(m => m.DeclaringType.IsTypePublic()) != null
-            ))
+            if (method.Method.IsPublic())
             {
-                message = "KeepPublicApi option in configuration";
+                message = "do not obfuscate public method";
                 return keepPublicApi;
             }
 
@@ -1008,7 +1005,7 @@ namespace Obfuscar
                 return true;
             }
 
-            if (field.Field.IsPublic() && field.DeclaringType.IsTypePublic())
+            if (field.Field.IsPublic())
             {
                 message = "KeepPublicApi option in configuration";
                 return keepPublicApi;
@@ -1071,11 +1068,7 @@ namespace Obfuscar
                 return true;
             }
 
-            if (prop.Property.IsPublic() && (
-                prop.DeclaringType.IsTypePublic() ||
-                prop.Property.GetMethod != null && map.GetMethodGroup(new MethodKey(prop.Property.GetMethod))?.Methods?.FirstOrDefault(m => m.DeclaringType.IsTypePublic()) != null ||
-                prop.Property.SetMethod != null && map.GetMethodGroup(new MethodKey(prop.Property.SetMethod))?.Methods?.FirstOrDefault(m => m.DeclaringType.IsTypePublic()) != null
-            ))
+            if (prop.Property.IsPublic())
             {
                 message = "KeepPublicApi option in configuration";
                 return keepPublicApi;

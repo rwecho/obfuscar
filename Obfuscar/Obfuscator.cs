@@ -299,8 +299,10 @@ namespace Obfuscar
             TypeNameCache.nameCache.Clear();
         }
 
-        private bool IsOnWindows {
-            get {
+        private bool IsOnWindows
+        {
+            get
+            {
                 // https://stackoverflow.com/a/38795621/11182
                 string windir = Environment.GetEnvironmentVariable("windir");
                 return !string.IsNullOrEmpty(windir) && windir.Contains(@"\") && Directory.Exists(windir);
@@ -341,7 +343,7 @@ namespace Obfuscar
         {
             IMapWriter mapWriter = Project.Settings.XmlMapping
                 ? new XmlMapWriter(writer)
-                : (IMapWriter) new TextMapWriter(writer);
+                : (IMapWriter)new TextMapWriter(writer);
 
             mapWriter.WriteMap(Mapping);
         }
@@ -657,7 +659,7 @@ namespace Obfuscar
 
                         foreach (Instruction instruction in method.Body.Instructions)
                         {
-                            if (instruction.OpCode == OpCodes.Ldstr && (string) instruction.Operand == fullName)
+                            if (instruction.OpCode == OpCodes.Ldstr && (string)instruction.Operand == fullName)
                                 instruction.Operand = newTypeKey.Fullname;
                         }
                     }
@@ -729,7 +731,7 @@ namespace Obfuscar
                         if (value != null)
                             stream = value;
                         else if (entry.Value is byte[])
-                            stream = new MemoryStream((byte[]) entry.Value);
+                            stream = new MemoryStream((byte[])entry.Value);
                         else
                             continue;
 
@@ -888,16 +890,11 @@ namespace Obfuscar
                 m.Update(ObfuscationStatus.Skipped, "public setter of a custom attribute");
                 // no problem when the getter or setter methods are renamed by RenameMethods()
             }
-            else if (prop.CustomAttributes.Count > 0)
+            else
             {
                 // If a property has custom attributes we don't remove the property but rename it instead.
                 var newName = NameMaker.UniqueName(Project.Settings.ReuseNames ? index++ : _uniqueMemberNameIndex++);
                 RenameProperty(info, propKey, prop, newName);
-            }
-            else
-            {
-                // add to to collection for removal
-                propsToDrop.Add(prop);
             }
             return index;
         }
@@ -1576,7 +1573,7 @@ namespace Obfuscar
                 // Now that we know the total size of the byte array, we can update the struct size and store it in the constant field
                 StructType.ClassSize = _dataBytes.Count;
                 for (int i = 0; i < _dataBytes.Count; i++)
-                    _dataBytes[i] = (byte) (_dataBytes[i] ^ (byte) i ^ 0xAA);
+                    _dataBytes[i] = (byte)(_dataBytes[i] ^ (byte)i ^ 0xAA);
                 DataConstantField.InitialValue = _dataBytes.ToArray();
 
                 // Add static constructor which initializes the dataField from the constant data field
@@ -1622,7 +1619,7 @@ namespace Obfuscar
                 worker2.Emit(OpCodes.Add);
                 worker2.Emit(OpCodes.Stloc_0);
                 backlabel1.Operand = worker2.Create(OpCodes.Ldloc_0);
-                worker2.Append((Instruction) backlabel1.Operand);
+                worker2.Append((Instruction)backlabel1.Operand);
                 worker2.Emit(OpCodes.Ldsfld, DataField);
                 worker2.Emit(OpCodes.Ldlen);
                 worker2.Emit(OpCodes.Conv_I4);
@@ -1654,7 +1651,7 @@ namespace Obfuscar
                 //
                 // Make a dictionary of all instructions to replace and their replacement.
                 //
-                Dictionary <Instruction, LdStrInstructionReplacement> oldToNewStringInstructions = new Dictionary<Instruction, LdStrInstructionReplacement>();
+                Dictionary<Instruction, LdStrInstructionReplacement> oldToNewStringInstructions = new Dictionary<Instruction, LdStrInstructionReplacement>();
 
                 for (int index = 0; index < method.Body.Instructions.Count; index++)
                 {
